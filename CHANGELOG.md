@@ -5,3 +5,7 @@
 ## 0.0.11
 
 * Add documentation and uses
+
+## 1.0.11
+
+* Add Listener and improved the documentation

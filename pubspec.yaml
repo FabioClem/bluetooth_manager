@@ -1,15 +1,16 @@
 name: bluetooth_manager
 description: A simple plugin to manage Bluetooth, turning on and off ang geting Bluetooth state.
-version: 0.0.11
+version: 1.0.11
 homepage: https://github.com/FabioClem/bluetooth_manager
 
 environment:
-  sdk: ">=2.15.1 <3.0.0"
+  sdk: ">=2.15.1 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

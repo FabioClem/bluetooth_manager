@@ -17,39 +17,34 @@ Import the library
     // Get bluetooth state
     // return a BluetoothState
     // on, off and unknow
-    await BluetoothManager.getBluetoothState.then((value) async => {
-        // ...
-        print(value)
-    });
+    BluetoothState bluetoothState =
+                      await bluetoothManager.getBluetoothState();
+    print(bluetoothState);
 
+```
+
+### Example listener bluetooth state
+
+```dart
+    // Get bluetooth state Listener
+    // return a BluetoothState
+    // on, off and unknow
+    bluetoothManager.getBluetoothStateStream().listen((BluetoothState bluetoothState) {
+        print(bluetoothState);
+        // Do your logic here...
+    });
 ```
 
 ### Example turn on/off bluetooth
 
 ```dart
     // Enable bluetooth
-    await BluetoothManager.enableBluetooth();
+    // you can call only await 
+    // bluetoothManager.disableBluetooth() or await bluetoothManager.enableBluetooth()
+    // if you don't want the response
+    ActionResponse actionResponse = await bluetoothManager.disableBluetooth();
+    print(actionResponse);
     // Disble bluetooth
-    await BluetoothManager.disableBluetooth();
-```
-
-### Example turn on/off bluetooth with ActionResponse
-
-```dart
-
-    // return a ActionResponse
-    // bluetoothIsOn, bluetoothIsOff, bluetoothAlreadyOn, bluetoothAlreadyOff, responseError
-
-    // Enable bluetooth and return state
-    await BluetoothManager.enableBluetooth().then((value) => {
-        // ...
-        print(value),
-    });
-    // Disble bluetooth and return state
-    await BluetoothManager.disableBluetooth().then((value) => {
-        // ...
-        print(value),
-     });
-
-    
+    ActionResponse actionResponse = await bluetoothManager.enableBluetooth();
+    print(actionResponse);
 ```
