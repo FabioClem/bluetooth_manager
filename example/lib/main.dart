@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
                   /// and set info [BluetoothState] in local _bluetoothState
                   /// dont forget to cancel if you are not using
                   setState(() {
-                    isListenerOn = true;
+                    isListenerOn = !isListenerOn;
                   });
                   subscription = bluetoothManager
                       .getBluetoothStateStream(timer: 500)
