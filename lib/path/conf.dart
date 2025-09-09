@@ -27,7 +27,8 @@ class BluetoothManagerPath {
       if (Platform.isAndroid) {
         return await bmAndroid.enable();
       } else if (Platform.isIOS) {
-        return await bmIOS.enable();
+        await bmIOS.openBluetoothSettings();
+        return ActionResponse.openedIOSSettings;
       } else {
         throw '[enable_bluetooth] platform_not_supported - only Android and iOS are supported';
       }
@@ -41,12 +42,23 @@ class BluetoothManagerPath {
       if (Platform.isAndroid) {
         return await bmAndroid.disable();
       } else if (Platform.isIOS) {
-        return await bmIOS.disable();
+        await bmIOS.openBluetoothSettings();
+        return ActionResponse.openedIOSSettings;
       } else {
         throw '[disable_bluetooth] platform_not_supported - only Android and iOS are supported';
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Stream<BluetoothState> getStateStream({int timer = 1000}) async* {
+    if (Platform.isAndroid) {
+      yield* bmAndroid.getStateStream(timer: timer);
+    } else if (Platform.isIOS) {
+      yield* bmIOS.getStateStream(timer: timer);
+    } else {
+      throw '[get_state_stream] platform_not_supported - only Android and iOS are supported';
     }
   }
 }

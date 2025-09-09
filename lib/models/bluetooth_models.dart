@@ -10,6 +10,7 @@ enum ActionResponse {
   bluetoothAlreadyOn,
   bluetoothAlreadyOff,
   responseError,
+  openedIOSSettings,
 }
 
 dynamic enumFromString(List values, String comp) {
