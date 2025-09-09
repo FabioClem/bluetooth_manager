@@ -1,50 +1,99 @@
 # bluetooth_manager
 
-Bluetooth Manager it's a Android Plugin to control the bluetooth basics, turning on/off and get the state.
+Manage Bluetooth on Android and iOS devices with Flutter.
 
-## How to Start
+This plugin allows you to:
 
-Import the library
+- Check Bluetooth state (on, off, unknown)
+- Turn Bluetooth on/off (Android only)
+- Listen to state changes via stream
 
-```dart
-    import 'package:bluetooth_manager/bluetooth_manager.dart';
+## Platform Support
+
+- **Android**: Full control (enable/disable/check state)
+- **iOS**: State check only (due to platform limitations)
+
+## Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+bluetooth_manager:
+  git:
+    url: https://github.com/FabioClem/bluetooth_manager.git
 ```
 
-## Use exemple
-### Example get bluetooth state
+Run:
 
-```dart
-    // Get bluetooth state
-    // return a BluetoothState
-    // on, off and unknow
-    BluetoothState bluetoothState =
-                      await bluetoothManager.getBluetoothState();
-    print(bluetoothState);
-
+```zsh
+flutter pub get
 ```
 
-### Example listener bluetooth state
+## Permissions
 
-```dart
-    // Get bluetooth state Listener
-    // return a BluetoothState
-    // on, off and unknow
-    bluetoothManager.getBluetoothStateStream().listen((BluetoothState bluetoothState) {
-        print(bluetoothState);
-        // Do your logic here...
-    });
+### Android
+
+Add to your `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- Android 12+ -->
 ```
 
-### Example turn on/off bluetooth
+### iOS
+
+Add to your `Info.plist`:
+
+```xml
+<key>NSBluetoothAlwaysUsageDescription</key>
+<string>This app uses Bluetooth to connect to devices.</string>
+```
+
+## How to Use
+
+Import the library:
 
 ```dart
-    // Enable bluetooth
-    // you can call only await 
-    // bluetoothManager.disableBluetooth() or await bluetoothManager.enableBluetooth()
-    // if you don't want the response
-    ActionResponse actionResponse = await bluetoothManager.disableBluetooth();
-    print(actionResponse);
-    // Disble bluetooth
-    ActionResponse actionResponse = await bluetoothManager.enableBluetooth();
-    print(actionResponse);
+import 'package:bluetooth_manager/bluetooth_manager.dart';
 ```
+
+### Check Bluetooth State
+
+```dart
+BluetoothState bluetoothState = await bluetoothManager.getBluetoothState();
+print(bluetoothState); // on, off, unknown
+```
+
+### Listen to State Changes
+
+```dart
+bluetoothManager.getBluetoothStateStream().listen((BluetoothState state) {
+  print(state);
+  // Your logic here...
+});
+```
+
+### Enable/Disable Bluetooth (Android only)
+
+```dart
+ActionResponse response = await bluetoothManager.enableBluetooth();
+print(response); // success, failed, not_supported
+
+ActionResponse response = await bluetoothManager.disableBluetooth();
+print(response);
+```
+
+## Notes
+
+- On iOS, it is not possible to enable/disable Bluetooth via code, only check the state.
+- On Android 12+, you may need to request permissions at runtime.
+
+## Development Environment
+
+- To build and test on iOS, you need a Mac with Xcode.
+- On Linux/Windows, only Android development is supported.
+
+## Full Example
+
+See the `example/` directory for a sample app.
