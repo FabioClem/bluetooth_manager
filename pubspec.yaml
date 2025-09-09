@@ -23,3 +23,5 @@ flutter:
       android:
         package: com.fahen.bluetooth_manager
         pluginClass: BluetoothManagerPlugin
+      ios:
+        pluginClass: BluetoothManagerPlugin
