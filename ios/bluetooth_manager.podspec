@@ -4,18 +4,21 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'bluetooth_manager'
-  s.version          = '0.0.1'
-  s.summary          = 'A new Flutter plugin project.'
+  s.version          = '2.0.0'
+  s.summary          = 'Flutter plugin to read and observe the Bluetooth adapter state on iOS.'
   s.description      = <<-DESC
-A new Flutter plugin project.
+A lightweight Flutter plugin that exposes the current Bluetooth adapter
+state on iOS, streams state changes through an EventChannel backed by
+CoreBluetooth, and can open the system Bluetooth settings screen (with
+fallback to the app Settings page when deep links are blocked).
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/FabioClem/bluetooth_manager'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'FabioClem' => 'https://github.com/FabioClem' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.platform = :ios, '12.0'
+  s.platform = :ios, '13.0'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

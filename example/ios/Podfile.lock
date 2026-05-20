@@ -1,0 +1,28 @@
+PODS:
+  - bluetooth_manager (1.0.11):
+    - Flutter
+  - Flutter (1.0.0)
+  - permission_handler_apple (9.1.1):
+    - Flutter
+
+DEPENDENCIES:
+  - bluetooth_manager (from `.symlinks/plugins/bluetooth_manager/ios`)
+  - Flutter (from `Flutter`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+
+EXTERNAL SOURCES:
+  bluetooth_manager:
+    :path: ".symlinks/plugins/bluetooth_manager/ios"
+  Flutter:
+    :path: Flutter
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+
+SPEC CHECKSUMS:
+  bluetooth_manager: 927a84209f238b0e431a54e418a0053fe6dea40e
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
+
+PODFILE CHECKSUM: 251cb053df7158f337c0712f2ab29f4e0fa474ce
+
+COCOAPODS: 1.16.2

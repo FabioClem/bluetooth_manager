@@ -1,40 +1,64 @@
 import 'package:bluetooth_manager/models/bluetooth_models.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-/// Gerenciador de Bluetooth para iOS usando MethodChannel.
+/// iOS-specific implementation of the plugin.
+///
+/// Because iOS does not expose a public API to toggle Bluetooth, this class
+/// can only read the current state (through `CoreBluetooth` on the native
+/// side) and ask the system to open settings. Deep links to the Bluetooth pane
+/// are attempted on the native side but are often ignored by iOS; the plugin
+/// then falls back to your app’s page in the Settings app.
+///
+/// State changes are delivered through the `bluetooth_manager/events`
+/// [EventChannel], which is backed by `CBCentralManagerDelegate` on the
+/// native side.
 class BluetoothManagerIOS {
   static const MethodChannel _channel = MethodChannel('bluetooth_manager');
+  static const EventChannel _events = EventChannel('bluetooth_manager/events');
 
-  /// Opens the Bluetooth settings screen on iOS so the user can manually enable/disable Bluetooth.
+  /// Opens settings so the user can enable or disable Bluetooth.
+  ///
+  /// Uses a native method that tries Bluetooth-specific URLs first, then
+  /// falls back to [UIApplication.openSettingsURLString] when the system
+  /// rejects those (common on current iOS). Throws if nothing could be opened.
   Future<void> openBluetoothSettings() async {
-    const urlString = 'App-Prefs:root=Bluetooth';
-    final url = Uri.parse(urlString);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw Exception('Could not open Bluetooth settings');
+    try {
+      await _channel.invokeMethod<void>('openBluetoothSettings');
+    } on PlatformException catch (e) {
+      throw Exception(e.message ?? 'Could not open Bluetooth settings');
     }
   }
 
-  /// Obtém o estado atual do Bluetooth no iOS.
+  /// Returns the current [BluetoothState] reported by the native iOS plugin.
+  ///
+  /// The native side only ever returns `"on"`, `"off"` or `"uknow"` (values
+  /// such as `resetting`, `unauthorized` and `unsupported` are coalesced to
+  /// `"uknow"`). Any unexpected value is also mapped to
+  /// [BluetoothState.uknow].
   Future<BluetoothState> getState() async {
     try {
-      final result = await _channel.invokeMethod('getBluetoothState');
-      if (result == null) {
-        throw Exception('Bluetooth state retornou null');
-      }
-      return enumFromString(BluetoothState.values, result);
-    } catch (e) {
-      rethrow;
+      final result = await _channel.invokeMethod<String>('getBluetoothState');
+      return enumFromString(BluetoothState.values, result) ??
+          BluetoothState.uknow;
+    } catch (_) {
+      return BluetoothState.uknow;
     }
   }
 
-  /// Stream do estado do Bluetooth, atualiza a cada [timer] ms.
-  Stream<BluetoothState> getStateStream({int timer = 1000}) async* {
-    while (true) {
-      await Future.delayed(Duration(milliseconds: timer < 500 ? 500 : timer));
-      yield await getState();
-    }
+  /// Emits the current [BluetoothState] every time the adapter state
+  /// changes.
+  ///
+  /// Backed by `CBCentralManagerDelegate.centralManagerDidUpdateState` on
+  /// the native side, so the stream only emits when the state actually
+  /// changes (plus one initial emission on subscription once the central
+  /// manager has resolved its state).
+  ///
+  /// The [timer] parameter is kept for backwards compatibility and is
+  /// ignored — the stream is event-driven, not polled.
+  Stream<BluetoothState> getStateStream({int timer = 1000}) {
+    return _events.receiveBroadcastStream().map((event) {
+      return enumFromString(BluetoothState.values, event as String?) ??
+          BluetoothState.uknow;
+    });
   }
 }

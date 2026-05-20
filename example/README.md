@@ -1,16 +1,40 @@
 # bluetooth_manager_example
 
-Demonstrates how to use the bluetooth_manager plugin.
+A minimal Flutter app that demonstrates every feature of the
+[`bluetooth_manager`](../) plugin:
 
-## Getting Started
+- reading the current Bluetooth state with `getBluetoothState()`;
+- subscribing to state changes with `getBluetoothStateStream()`;
+- toggling the adapter with `enableBluetooth()` / `disableBluetooth()`
+  (on iOS this opens the system Bluetooth settings);
+- requesting Android runtime permissions through
+  [`permission_handler`](https://pub.dev/packages/permission_handler)
+  (iOS and macOS rely on Core Bluetooth via the plugin — see below).
 
-This project is a starting point for a Flutter application.
+## Permissions in this example
 
-A few resources to get you started if this is your first Flutter project:
+| Platform | How permissions are handled |
+| -------- | --------------------------- |
+| Android  | `permission_handler` requests `bluetooth` and `bluetoothConnect` on startup. |
+| iOS      | Skipped in Dart. The plugin shows the Core Bluetooth dialog on first state read; requires `NSBluetoothAlwaysUsageDescription` in `ios/Runner/Info.plist`. |
+| macOS    | Skipped in Dart. Same as iOS; requires `NSBluetoothAlwaysUsageDescription` and the Bluetooth sandbox entitlement in `macos/Runner/*.entitlements`. |
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+> Do **not** call `Permission.bluetooth` on iOS/macOS in this example: `permission_handler` has no macOS implementation, and on iOS Bluetooth support must be enabled explicitly in the Podfile (`PERMISSION_BLUETOOTH=1`).
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Running
+
+```bash
+flutter pub get
+flutter run              # picks a connected device
+flutter run -d macos     # macOS desktop
+```
+
+## UI overview
+
+| Button                       | What it does                                                          |
+| ---------------------------- | --------------------------------------------------------------------- |
+| **Get bluetooth State**      | Cancels any active listener and performs a one-shot read of the state. |
+| **Listen/Pause bluetooth State** | Starts a polling stream (500 ms) and updates the UI on every emission. |
+| **Turn on/off**              | Toggles the adapter based on the last known state.                    |
+
+See [`lib/main.dart`](lib/main.dart) for the full source.

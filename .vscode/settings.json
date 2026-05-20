@@ -1,0 +1,9 @@
+{
+  "dart.flutterSdkPath": "/Users/fabio.clem/fvm/versions/3.35.7",
+  "dart.flutterSdkPaths": [
+    "/Users/fabio.clem/fvm/versions/3.35.7"
+  ],
+  "search.exclude": {
+    "**/.fvm": true
+  }
+}

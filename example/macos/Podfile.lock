@@ -1,0 +1,22 @@
+PODS:
+  - bluetooth_manager (1.0.12):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - bluetooth_manager (from `Flutter/ephemeral/.symlinks/plugins/bluetooth_manager/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+  bluetooth_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/bluetooth_manager/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  bluetooth_manager: d675099cfbd23a738f6492e33af2e6d07b6a0e0f
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+
+PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
+
+COCOAPODS: 1.16.2

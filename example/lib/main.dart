@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bluetooth_manager/models/bluetooth_models.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,26 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  setBluetoothPermission() async {
-    print(await Permission.bluetooth.request().isGranted);
+  /// Requests runtime Bluetooth permissions.
+  ///
+  /// * **Android** — uses [permission_handler] (`BLUETOOTH` / `BLUETOOTH_CONNECT`).
+  /// * **iOS / macOS** — skipped. [permission_handler] does not support macOS,
+  ///   and on iOS it requires `PERMISSION_BLUETOOTH=1` in the Podfile. The
+  ///   [BluetoothManager] plugin triggers the Core Bluetooth prompt on first use
+  ///   when `NSBluetoothAlwaysUsageDescription` is set in Info.plist.
+  Future<void> setBluetoothPermission() async {
+    if (!Platform.isAndroid) return;
+
+    try {
+      final bluetoothGranted = await Permission.bluetooth.request().isGranted;
+      print('bluetooth: $bluetoothGranted');
+
+      final connectGranted =
+          await Permission.bluetoothConnect.request().isGranted;
+      print('bluetoothConnect: $connectGranted');
+    } catch (e) {
+      print('Permission request failed: $e');
+    }
   }
 
   @override
