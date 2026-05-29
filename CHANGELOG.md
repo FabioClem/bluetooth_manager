@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 2.0.1
+
+- **Android:** add `namespace` in `android/build.gradle` (required by AGP 8+),
+  bump `compileSdk` to 35, `minSdk` to 21, and align Java compatibility to 17.
+
 ## 2.0.0
 
 - **New native architecture for iOS and macOS.** Each platform now has its
